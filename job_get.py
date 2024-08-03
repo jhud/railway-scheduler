@@ -6,7 +6,7 @@ def job(get_url: str):
     print("Running GET job...")
     backoff = 6.0
     tries = 4
-    while tries > 0:
+    while True:
         tries -= 1
         try:
             response = requests.get(get_url)
@@ -17,9 +17,13 @@ def job(get_url: str):
             err = True
 
         if err:
+            if tries <= 0:
+                print("Could not complete job. Giving up.")
+                break
             print(f"Retrying in {backoff}s...")
             time.sleep(backoff)
             backoff *= 2.0
         else:
             break
+    print("done.")
 
