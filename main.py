@@ -36,4 +36,4 @@ for action in sched:
 
 while True:
     schedule.run_pending()
-    time.sleep(os.getenv("POLL_SECONDS", 3600))
+    time.sleep(int(os.getenv("POLL_SECONDS", 3600)))
