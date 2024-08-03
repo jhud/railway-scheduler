@@ -24,7 +24,7 @@ for action in sched:
     job_exec = jobs[action["job"]]
 
     if timing == "frequent":
-        schedule.every().minutes.do(job_get.job, param)
+        schedule.every(10).minutes.do(job_get.job, param)
     elif timing == "hourly":
         schedule.every().hour.do(job_get.job, param)
     elif timing == "never":
