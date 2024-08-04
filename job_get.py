@@ -5,7 +5,7 @@ import requests
 def job(get_url: str):
     """Hit a URL until it doesn't give an error, with exponential backoff. """
     print("Running GET job...")
-    backoff = int(os.getenv("INITIAL_BACKOFF", 12))
+    backoff = int(os.getenv("INITIAL_RETRY_SECONDS", 12))
     tries = 4
     while True:
         tries -= 1
