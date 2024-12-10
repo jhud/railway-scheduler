@@ -4,16 +4,17 @@ import time
 import requests
 
 def job_get(url: str):
+    print(f"Running GET job to {url}...")
     job(url, "get")
 
 
 def job_post(url: str):
+    print(f"Running POST job to {url}...")
     job(url, "post")
 
 
 def job(url: str, method: str):
     """Hit a URL until it doesn't give an error, with exponential backoff. """
-    print("Running GET job...")
     backoff = int(os.getenv("INITIAL_RETRY_SECONDS", 12))
     tries = 4
     while True:
