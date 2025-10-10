@@ -3,6 +3,9 @@ import time
 
 import requests
 
+class JobFailedException(Exception):
+    pass
+
 def job_get(url: str):
     print(f"Running GET job to {url}...")
     job(url, "get")
@@ -35,7 +38,7 @@ def job(url: str, method: str):
         if err:
             if tries <= 0:
                 print("Could not complete job. Giving up.")
-                raise Exception(f"Could not complete job {url}. Giving up.")
+                raise JobFailedException(f"Could not complete job {url}. Giving up.")
             
             print(f"Retrying in {backoff}s...")
             time.sleep(backoff)
