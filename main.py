@@ -47,6 +47,7 @@ for action in sched:
     except job_http_request.JobFailedException as e:
         print("Logging failure of job with Sentry...")
         sentry_sdk.capture_exception(e)
+        print("Failure registered.")
 
 while True:
     schedule.run_pending()
