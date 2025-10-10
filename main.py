@@ -5,6 +5,16 @@ import os
 
 import job_http_request
 
+import sentry_sdk
+
+# Cateche errors with Sentry
+sentry_sdk.init(
+    dsn=os.environ["SENTRY_DSN"],
+    # Add data like request headers and IP for users,
+    # see https://docs.sentry.io/platforms/python/data-management/data-collected/ for more info
+    send_default_pii=True,
+)
+
 """
 Be aware that it runs at UTC on Railway.
 Example of how to run this service:
@@ -23,16 +33,19 @@ for action in sched:
 
     job_exec = jobs[action["job"]]
 
-    if timing == "test":
-        schedule.every(10).seconds.do(job_exec, param)
-    elif timing == "frequent":
-        schedule.every(10).minutes.do(job_exec, param)
-    elif timing == "hourly":
-        schedule.every().hour.do(job_exec, param)
-    elif timing == "never":
-        pass
-    else:
-        schedule.every().day.at(timing).do(job_exec, action["param"])
+    try:
+        if timing == "test":
+            schedule.every(10).seconds.do(job_exec, param)
+        elif timing == "frequent":
+            schedule.every(10).minutes.do(job_exec, param)
+        elif timing == "hourly":
+            schedule.every().hour.do(job_exec, param)
+        elif timing == "never":
+            pass
+        else:
+            schedule.every().day.at(timing).do(job_exec, action["param"])
+    except Exception as e:
+        sentry_sdk.capture_exception(e)
 
 while True:
     schedule.run_pending()

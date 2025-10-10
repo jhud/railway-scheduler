@@ -25,7 +25,7 @@ def job(url: str, method: str):
             elif method == "post":
                 response = requests.post(url)
             else:
-                raise ValueError(f"Unknown opertion {method}")
+                raise ValueError(f"Unknown operation {method}")
             print(response.text)
             err = response.status_code >= 400
         except requests.exceptions.ConnectionError as e:
@@ -35,7 +35,8 @@ def job(url: str, method: str):
         if err:
             if tries <= 0:
                 print("Could not complete job. Giving up.")
-                break
+                raise Exception(f"Could not complete job {url}. Giving up.")
+            
             print(f"Retrying in {backoff}s...")
             time.sleep(backoff)
             backoff *= 2.0
