@@ -33,22 +33,23 @@ for action in sched:
 
     job_exec = jobs[action["job"]]
 
+    if timing == "test":
+        schedule.every(10).seconds.do(job_exec, param)
+    elif timing == "frequent":
+        schedule.every(10).minutes.do(job_exec, param)
+    elif timing == "hourly":
+        schedule.every().hour.do(job_exec, param)
+    elif timing == "never":
+        pass
+    else:
+        schedule.every().day.at(timing).do(job_exec, action["param"])
+
+
+while True:
     try:
-        if timing == "test":
-            schedule.every(10).seconds.do(job_exec, param)
-        elif timing == "frequent":
-            schedule.every(10).minutes.do(job_exec, param)
-        elif timing == "hourly":
-            schedule.every().hour.do(job_exec, param)
-        elif timing == "never":
-            pass
-        else:
-            schedule.every().day.at(timing).do(job_exec, action["param"])
+        schedule.run_pending()
     except job_http_request.JobFailedException as e:
         print("Logging failure of job with Sentry...")
         sentry_sdk.capture_exception(e)
         print("Failure registered.")
-
-while True:
-    schedule.run_pending()
     time.sleep(int(os.getenv("POLL_SECONDS", 3600)))
