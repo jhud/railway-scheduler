@@ -29,7 +29,7 @@ def job(url: str, method: str):
                 response = requests.post(url)
             else:
                 raise ValueError(f"Unknown operation {method}")
-            print(response.text)
+            print(str(response.text)[:300])
             err = response.status_code >= 400
         except requests.exceptions.ConnectionError as e:
             print(f"Got connection error {e}")
