@@ -47,7 +47,7 @@ for action in sched:
 
 while True:
     try:
-        with sentry_sdk.crons.monitor(monitor_slug='booking-system-scheduler'):
+        with sentry_sdk.crons.monitor(monitor_slug=os.environ["SENTRY_MONITOR_NAME"]):
             schedule.run_pending()
     except job_http_request.JobFailedException as e:
         print("Logging failure of job with Sentry...")
